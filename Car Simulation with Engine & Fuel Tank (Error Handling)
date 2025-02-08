@@ -1,0 +1,93 @@
+import random
+
+class EngineErr(Exception):
+    pass
+
+class TankErr(Exception):
+    pass
+
+class NoFuelErr(Exception):
+    pass
+
+class AutoErr(Exception):
+    pass
+
+class Engine:
+    def __init__(self):
+        self.running = False
+
+    def turn_on(self):
+        if random.choice([True, False]):
+            raise EngineErr("Engine error occurred while turning on.")
+        self.running = True
+
+    def turn_off(self):
+        if random.choice([True, False]):
+            raise EngineErr("Engine error occurred while turning off.")
+        self.running = False
+
+    def get_running_state(self):
+        return self.running
+
+class FuelTank:
+    def __init__(self, capacity):
+        self.capacity = capacity
+        self.current_level = 0.0
+
+    def fill_up(self, amount_fuel):
+        if amount_fuel <= 0:
+            raise NoFuelErr("Fuel amount cannot be zero or negative.")
+        if self.current_level + amount_fuel > self.capacity:
+            raise TankErr("Tank cannot hold this much fuel.")
+        self.current_level += amount_fuel
+
+    def get_capacity(self):
+        return self.capacity
+
+    def get_current_level(self):
+        return self.current_level
+
+class Auto:
+    def __init__(self, engine, fuel_tank):
+        self.engine = engine
+        self.fuel_tank = fuel_tank
+
+    def turn_on(self):
+        try:
+            self.engine.turn_on()
+        except EngineErr as e:
+            raise AutoErr(f"Auto error occurred: {e}")
+
+    def turn_off(self):
+        try:
+            self.engine.turn_off()
+        except EngineErr as e:
+            raise AutoErr(f"Auto error occurred: {e}")
+
+    def fill_up(self, amount_fuel):
+        try:
+            self.fuel_tank.fill_up(amount_fuel)
+        except (TankErr, NoFuelErr) as e:
+            raise AutoErr(f"Auto error occurred: {e}")
+
+engine = Engine()
+fuel_tank = FuelTank(capacity=100)
+car = Auto(engine=engine, fuel_tank=fuel_tank)
+
+try:
+    car.turn_on()
+    print("Car turned on successfully.")
+except AutoErr as e:
+    print(e)
+
+try:
+    car.turn_off()
+    print("Car turned off successfully.")
+except AutoErr as e:
+    print(e)
+
+try:
+    car.fill_up(50)
+    print("Car filled up successfully.")
+except AutoErr as e:
+    print(e)
