@@ -1,0 +1,44 @@
+class Phone:
+    def call(self, number):  
+        print(f"Establishing a call to {number}.")
+
+class Smartphone(Phone):  
+    def __init__(self, alarm_number):  
+        self.alarm_number = alarm_number  
+
+    def call(self, number):
+        super().call(number) 
+        print(f"Smartphone: Connection established with {number}.")
+
+    def make_picture(self):
+        print("Taking a picture with the smartphone camera.")
+
+    def call_alarm(self):
+        self.call(self.alarm_number) 
+
+class Tablet(Smartphone): 
+    def __init__(self, alarm_number, pen):  
+        super().__init__(alarm_number)   
+        self.pen = pen  
+
+    def draw(self):
+        print(f"Drawing on the screen with the {self.pen}.")
+
+
+phone = Phone()  
+smartphone = Smartphone(alarm_number="911")
+tablet = Tablet(alarm_number="911", pen="stylus")  
+
+print("\nPhone:")
+phone.call("1234567890")  
+
+print("\nSmartphone:")
+smartphone.call("9876543210")
+smartphone.make_picture()
+smartphone.call_alarm()
+
+print("\nTablet:")
+tablet.call("1122334455")  
+tablet.make_picture()  
+tablet.call_alarm()  
+tablet.draw()  
